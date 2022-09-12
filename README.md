@@ -1,1 +1,2 @@
-# Electron-React-Redux-Firebase
+# Electron-React
+
