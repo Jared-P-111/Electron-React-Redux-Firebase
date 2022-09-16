@@ -1,9 +1,7 @@
 // Main Process
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain, Notification } = require('electron');
 const path = require('path');
-
-// Turn off hardware acceleration
-app.disableHardwareAcceleration();
+const isDev = !app.isPackaged;
 
 function createWindow() {
   // Browser Window <- Renderer Process
@@ -12,25 +10,33 @@ function createWindow() {
     height: 800,
     backgroundColor: 'white',
     webPreferences: {
+      sandbox: false,
       nodeIntegration: false,
-      // will sanitize JS code
-      // TODO: explain when React application is initialize
       worldSafeExecuteJavaScript: true,
-      // is a feature that ensures that both, your preload scripts and Electron
-      // internal logic run in separate
       contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
   win.loadFile('index.html');
-  win.webContents.openDevTools();
+  isDev && win.webContents.openDevTools();
 }
 
-require('electron-reload')(__dirname, {
-  electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
-});
+if (isDev) {
+  require('electron-reload')(__dirname, {
+    electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+  });
+}
 
 app.whenReady().then(createWindow);
+
+ipcMain.on('notify', (_, message) => {
+  new Notification({ title: 'Notification', body: message }).show();
+});
+
+ipcMain.on('app-quit', () => {
+  app.quit();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

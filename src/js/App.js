@@ -1,17 +1,28 @@
 import React from 'react';
 
+import HomeView from './views/Home';
+import ChatView from './views/Chat';
+import LoginView from './views/Login';
+import RegisterView from './views/Register';
+import SettingsView from './views/Settings';
+
+import Navbar from './components/Navbar';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+
 const App = () => {
-  const title = <h1>App Component</h1>;
-
-  const sendNotification = () => {
-    alert('You clicked the button');
-  };
-
   return (
-    <>
-      <div>{title}</div>
-      <button onClick={sendNotification}>Alert</button>
-    </>
+    <Router>
+      <Navbar />
+      <div className="content-wrapper">
+        <Routes>
+          <Route path="/" exact element={<HomeView />} />
+          <Route path="/chat" element={<ChatView />} />
+          <Route path="/settings" element={<SettingsView />} />
+          <Route path="/login" element={<LoginView />} />
+          <Route path="/register" element={<RegisterView />} />
+        </Routes>
+      </div>
+    </Router>
   );
 };
 

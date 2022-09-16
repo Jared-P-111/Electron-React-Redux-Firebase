@@ -1,5 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import { createRoot } from 'react-dom/client';
+import App from './App.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './index.scss';
 
-ReactDOM.render(<App />, document.getElementById('electronChat'));
+const container = document.getElementById('chatApp');
+const root = createRoot(container);
+root.render(<App />);
